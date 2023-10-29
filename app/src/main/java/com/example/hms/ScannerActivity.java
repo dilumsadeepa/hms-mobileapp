@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,8 @@ public class ScannerActivity extends AppCompatActivity {
     private static final int CAMERA_PERMISSION_REQUEST = 123;
     private CodeScanner mCodeScanner;
 
+    TextView resultt;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +28,9 @@ public class ScannerActivity extends AppCompatActivity {
 
         CodeScannerView scannerView = findViewById(R.id.scanner_view);
         mCodeScanner = new CodeScanner(this, scannerView);
+        resultt = findViewById(R.id.resulttext);
+
+
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
             public void onDecoded(@NonNull final Result result) {
@@ -32,6 +38,7 @@ public class ScannerActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Toast.makeText(ScannerActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
+                        resultt.setText(result.getText());
                     }
                 });
             }
