@@ -1,15 +1,67 @@
 package com.example.hms;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import com.budiyev.android.codescanner.CodeScanner;
+import com.budiyev.android.codescanner.CodeScannerView;
+import com.budiyev.android.codescanner.DecodeCallback;
+import com.google.zxing.Result;
 
 public class ScannerActivity extends AppCompatActivity {
-
+    private static final int CAMERA_PERMISSION_REQUEST = 123;
+    private CodeScanner mCodeScanner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
+
+        CodeScannerView scannerView = findViewById(R.id.scanner_view);
+        mCodeScanner = new CodeScanner(this, scannerView);
+        mCodeScanner.setDecodeCallback(new DecodeCallback() {
+            @Override
+            public void onDecoded(@NonNull final Result result) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(ScannerActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+        scannerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Check for camera permission and request if not granted
+                if (ContextCompat.checkSelfPermission(ScannerActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    mCodeScanner.startPreview();
+                } else {
+                    ActivityCompat.requestPermissions(ScannerActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST);
+                }
+            }
+        });
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults); // Call super method
+
+        if (requestCode == CAMERA_PERMISSION_REQUEST) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, you can now use the camera.
+                mCodeScanner.startPreview();
+            } else {
+                // Permission denied, handle accordingly (e.g., show a message to the user).
+            }
+        }
+    }
+
 }
