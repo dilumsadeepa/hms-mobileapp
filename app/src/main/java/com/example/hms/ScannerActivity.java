@@ -42,7 +42,7 @@ public class ScannerActivity extends AppCompatActivity {
                         resultt.setText(result.getText());
 
                         if(resultt != null){
-                            Intent intent = new Intent(ScannerActivity.this, Complaint.class);
+                            Intent intent = new Intent(ScannerActivity.this, Viewitem.class);
                             intent.putExtra("result_data", result.getText());
                             startActivity(intent);
                         }
