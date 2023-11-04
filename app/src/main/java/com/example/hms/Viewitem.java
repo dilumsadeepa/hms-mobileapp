@@ -25,21 +25,43 @@ public class Viewitem extends AppCompatActivity {
     TextView mdate;
     TextView status;
 
-    private static final String API_URL = "http://192.168.8.126:8080/res/find/1";
+    String resultData;
+
+
+
+    //private static final String API_URL = "http://192.168.8.126:8080/res/find/1";
+
+    private  final String BASE_API_URL = "http://192.168.8.126:8080/res/find/";
+
+    public String API_URL = null;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_viewitem);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+             resultData = extras.getString("result_data").trim();
+            System.out.println("-------------------------------"+resultData+"--");
+             final String API_ENDPOINT_ID = resultData;
+              API_URL = BASE_API_URL+API_ENDPOINT_ID;
+        }
+        setContentView(R.layout.activity_viewitem);
         name = findViewById(R.id.iname);
         room = findViewById(R.id.iroomno);
         idate = findViewById(R.id.iidate);
         mdate = findViewById(R.id.ilmdate);
         status = findViewById(R.id.istatus);
 
-        new APICallTask().execute();
+        new APICallTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+
     }
+
+
+
 
     private class APICallTask extends AsyncTask<Void, Void, String> {
 
@@ -53,6 +75,7 @@ public class Viewitem extends AppCompatActivity {
                 int responseCode = connection.getResponseCode();
 
                 if (responseCode == HttpURLConnection.HTTP_OK) {
+                    System.out.println("+++++++++++ok +++++++++++++++++");
                     InputStream inputStream = connection.getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
                     StringBuilder result = new StringBuilder();

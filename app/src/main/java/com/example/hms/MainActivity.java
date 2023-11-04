@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Start the ScannerActivity
-                Intent intent = new Intent(MainActivity.this, Viewitem.class);
+                Intent intent = new Intent(MainActivity.this, ScannerActivity.class);
                 startActivity(intent);
             }
         });

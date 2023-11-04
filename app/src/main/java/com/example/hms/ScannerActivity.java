@@ -55,7 +55,6 @@ public class ScannerActivity extends AppCompatActivity {
         scannerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Check for camera permission and request if not granted
                 if (ContextCompat.checkSelfPermission(ScannerActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                     mCodeScanner.startPreview();
                 } else {
