@@ -31,7 +31,7 @@ public class Viewitem extends AppCompatActivity {
 
     //private static final String API_URL = "http://192.168.8.126:8080/res/find/1";
 
-    private  final String BASE_API_URL = "http://192.168.8.126:8080/res/find/";
+    private  final String BASE_API_URL = "http://192.168.8.126:8080/res/find/1";
 
     public String API_URL = null;
 
@@ -45,8 +45,8 @@ public class Viewitem extends AppCompatActivity {
         if (extras != null) {
              resultData = extras.getString("result_data").trim();
             System.out.println("-------------------------------"+resultData+"--");
-             final String API_ENDPOINT_ID = resultData;
-              API_URL = BASE_API_URL+API_ENDPOINT_ID;
+            // final String API_ENDPOINT_ID = resultData;
+             // API_URL = BASE_API_URL+API_ENDPOINT_ID;
         }
         setContentView(R.layout.activity_viewitem);
         name = findViewById(R.id.iname);
@@ -56,7 +56,6 @@ public class Viewitem extends AppCompatActivity {
         status = findViewById(R.id.istatus);
 
         new APICallTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
 
     }
 
@@ -68,14 +67,14 @@ public class Viewitem extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... params) {
             try {
-                URL url = new URL(API_URL);
+                URL url = new URL(BASE_API_URL);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
 
                 int responseCode = connection.getResponseCode();
 
                 if (responseCode == HttpURLConnection.HTTP_OK) {
-                    System.out.println("+++++++++++ok +++++++++++++++++");
+                    System.out.println("+++++++++++ok+++++++++++++++++");
                     InputStream inputStream = connection.getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
                     StringBuilder result = new StringBuilder();
