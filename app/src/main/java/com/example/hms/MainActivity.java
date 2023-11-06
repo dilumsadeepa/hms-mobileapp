@@ -1,35 +1,105 @@
 package com.example.hms;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.Manifest;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.hms.model.Users;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int CAMERA_PERMISSION_REQUEST = 123;
-    Button btn;
+    EditText editTextIdentifier, editTextPassword;
+    Button loginButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btn = findViewById(R.id.button);
+        if (Users.getId() != 0){
+            Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+            startActivity(intent);
+        }
 
-        btn.setOnClickListener(new View.OnClickListener() {
+        editTextIdentifier = findViewById(R.id.editTextIdentifier);
+        editTextPassword = findViewById(R.id.editTextPassword);
+        loginButton = findViewById(R.id.loginButton);
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Start the ScannerActivity
-                Intent intent = new Intent(MainActivity.this, ScannerActivity.class);
-                startActivity(intent);
+                String identifier = editTextIdentifier.getText().toString().trim();
+                String password = editTextPassword.getText().toString().trim();
+
+                // Call the method to authenticate using the API
+                authenticateUser(identifier, password);
             }
         });
+    }
+
+    private void authenticateUser(String identifier, String password) {
+        String apiUrl = "http://52.201.92.58:8080/users/authenticate";
+
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("identifier", identifier);
+            jsonBody.put("password", password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, apiUrl, jsonBody,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String message = response.getString("message");
+                            Users.setId(response.getInt("id"));
+                            Users.setName(response.getString("name"));
+                            Users.setRole(response.getInt("role"));
+
+                            if (message.toLowerCase().contains("successful")) {
+                                // Authentication successful
+                                Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+
+                                Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+                                startActivity(intent);
+                            } else {
+                                // Authentication failed
+                                Toast.makeText(MainActivity.this, "Login Failed: " + message, Toast.LENGTH_SHORT).show();
+                                // Save the response data for future use
+                                // Do something with the response data here
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(MainActivity.this, "Error: " + error.toString(), Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                    }
+                }
+        );
+
+        requestQueue.add(jsonObjectRequest);
     }
 }

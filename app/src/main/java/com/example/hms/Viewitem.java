@@ -27,11 +27,13 @@ public class Viewitem extends AppCompatActivity {
 
     String resultData;
 
+    public int id;
+
 
 
     //private static final String API_URL = "http://192.168.8.126:8080/res/find/1";
 
-    private  final String BASE_API_URL = "http://192.168.8.126:8080/res/find/";
+    private  final String BASE_API_URL = "http://52.201.92.58:8080/res/find/";
 
     public String API_URL = null;
 
@@ -87,11 +89,12 @@ public class Viewitem extends AppCompatActivity {
 
                     return result.toString();
                 } else {
-                    // Handle the error case
+                    Toast.makeText(Viewitem.this, responseCode, Toast.LENGTH_SHORT).show();
                     return "Error: " + responseCode;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                Toast.makeText(Viewitem.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 return "Error: " + e.getMessage();
             }
         }
