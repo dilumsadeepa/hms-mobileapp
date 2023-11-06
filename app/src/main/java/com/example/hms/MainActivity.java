@@ -2,7 +2,9 @@ package com.example.hms;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -73,6 +75,17 @@ public class MainActivity extends AppCompatActivity {
                             Users.setId(response.getInt("id"));
                             Users.setName(response.getString("name"));
                             Users.setRole(response.getInt("role"));
+                            Users.setIndex_no(response.getString("index_no"));
+
+                            SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                            editor.putInt("id_key", response.getInt("id"));
+                            editor.putString("index_key", response.getString("index_no"));
+                            editor.putString("name_key", response.getString("name"));
+
+                            editor.apply();
 
                             if (message.toLowerCase().contains("successful")) {
                                 // Authentication successful

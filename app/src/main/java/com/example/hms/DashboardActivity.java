@@ -2,7 +2,9 @@ package com.example.hms;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,7 +19,11 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        String userName = Users.getName(); // Retrieve the name from the Users class
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        String name = sharedPreferences.getString("name_key", "name");
+
+
+        String userName = name;
 
         TextView textView = findViewById(R.id.uname);
         textView.setText(userName);
@@ -26,6 +32,8 @@ public class DashboardActivity extends AppCompatActivity {
         combtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Users.setIndex_no(Users.getIndex_no());
+                Users.setId(Users.getId());
                 Intent intent = new Intent(DashboardActivity.this, ScannerActivity.class);
                 startActivity(intent);
             }

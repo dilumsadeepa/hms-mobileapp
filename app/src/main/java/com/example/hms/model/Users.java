@@ -7,6 +7,16 @@ public class Users {
 
     private static int role;
 
+    private static String index_no;
+
+    public static String getIndex_no() {
+        return index_no;
+    }
+
+    public static void setIndex_no(String index_no) {
+        Users.index_no = index_no;
+    }
+
     public static int getRole() {
         return role;
     }

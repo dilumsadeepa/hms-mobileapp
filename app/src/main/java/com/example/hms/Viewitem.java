@@ -2,10 +2,16 @@ package com.example.hms;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.hms.model.Res;
+import com.example.hms.model.Users;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,11 +33,8 @@ public class Viewitem extends AppCompatActivity {
 
     String resultData;
 
-    public int id;
+    public int reid = 0;
 
-
-
-    //private static final String API_URL = "http://192.168.8.126:8080/res/find/1";
 
     private  final String BASE_API_URL = "http://52.201.92.58:8080/res/find/";
 
@@ -58,6 +61,27 @@ public class Viewitem extends AppCompatActivity {
         status = findViewById(R.id.istatus);
 
         new APICallTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        Button cancel = findViewById(R.id.cancelasset);
+        Button complaint = findViewById(R.id.button2);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Viewitem.this,DashboardActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        complaint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (reid != 0){
+                    Res.setResId(reid);
+                    Intent intent = new Intent(Viewitem.this, AddCom.class);
+                    startActivity(intent);
+                }
+            }
+        });
 
 
     }
@@ -110,6 +134,8 @@ public class Viewitem extends AppCompatActivity {
                 String idateValue = jsonResponse.getString("installationDate");
                 String mdateValue = jsonResponse.getString("lastMaintenanceDate");
                 String statusValue = jsonResponse.getString("status");
+
+                reid = jsonResponse.getInt("resId");
 
                 // Set the values to the corresponding TextViews
                 name.setText(nameValue);

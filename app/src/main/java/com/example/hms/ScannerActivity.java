@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
+import com.example.hms.model.Users;
 import com.google.zxing.Result;
 
 public class ScannerActivity extends AppCompatActivity {
@@ -42,6 +43,8 @@ public class ScannerActivity extends AppCompatActivity {
                         resultt.setText(result.getText());
 
                         if(resultt != null){
+                            Users.setIndex_no(Users.getIndex_no());
+                            Users.setId(Users.getId());
                             Intent intent = new Intent(ScannerActivity.this, Viewitem.class);
                             intent.putExtra("result_data", result.getText());
                             startActivity(intent);
