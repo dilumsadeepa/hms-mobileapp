@@ -29,12 +29,19 @@ public class DashboardActivity extends AppCompatActivity {
         textView.setText(userName);
 
         ImageView combtn = findViewById(R.id.complaintbtn);
+        ImageView viewCom = findViewById(R.id.viewCom);
         combtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Users.setIndex_no(Users.getIndex_no());
-                Users.setId(Users.getId());
                 Intent intent = new Intent(DashboardActivity.this, ScannerActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        viewCom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DashboardActivity.this, ViewCom.class);
                 startActivity(intent);
             }
         });
